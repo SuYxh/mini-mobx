@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Reaction } from "mobx";
-
+import { Reaction, observable } from "mobx";
 
 export function useObserver(fn) {
   //仅仅是为了得到一个强行更新组件的函数
@@ -44,4 +43,8 @@ function makeClassComponentObserver(ClassComponent) {
     return rendering;
   };
   return ClassComponent;
+}
+
+export function useLocalObservable(initializer) {
+  return useState(() => observable(initializer(), {}, { autoBind: true }))[0];
 }

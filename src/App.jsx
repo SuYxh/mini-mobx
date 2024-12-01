@@ -1,6 +1,7 @@
 // import UseObserver from './example/UseObserver'
 // import Observer from './example/Observer'
-import HocObserver from './example/HocObserver'
+// import HocObserver from './example/HocObserver'
+import UseLocalObservable from './example/UseLocalObservable'
 import './App.css'
 
 function App() {
@@ -8,7 +9,7 @@ function App() {
   return (
     <>
       <p className="read-the-docs">
-        <HocObserver />
+        <UseLocalObservable />
       </p>
     </>
   )
