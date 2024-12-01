@@ -1,3 +1,4 @@
+import UseObserver from './example/UseObserver'
 import './App.css'
 
 function App() {
@@ -5,7 +6,7 @@ function App() {
   return (
     <>
       <p className="read-the-docs">
-        empty-project
+        <UseObserver />
       </p>
     </>
   )
