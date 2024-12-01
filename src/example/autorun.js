@@ -7,9 +7,21 @@ let proxyObj = observable(obj);
 
 console.log(proxyObj);
 
-// // 创建一个响应器，其实也就是观察者，负责观察可观察的值
+
+// autorun(() => {
+//   console.log('autorun', proxyObj.name, proxyObj.age);
+// });
+
+// proxyObj.name = 'dahuang2';
+
+
 autorun(() => {
-  console.log('autorun', proxyObj.name, proxyObj.age);
+  // debugger
+  console.log('autorun', proxyObj.age);
 });
 
-proxyObj.name = 2;
+console.log('更新 age 的值')
+
+// debugger
+proxyObj.name = 'dahuang2';
+// proxyObj.age = 20;

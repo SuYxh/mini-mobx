@@ -375,3 +375,33 @@ export const globalState = {
 }
 ```
 
+
+
+
+
+## 依赖收集和派发更新
+
+
+
+![image-20241201181704046](https://qn.huat.xyz/mac/202412011817099.png)
+
+
+
+
+
+
+
+![image-20241201181723646](https://qn.huat.xyz/mac/202412011817708.png)
+
+
+
+
+
+
+
+
+
+
+
+
+

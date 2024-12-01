@@ -5,7 +5,7 @@ function autorun(view) {
   const reaction = new Reaction(
     name,
     function () {
-      view()
+      this.track(view);
     }
   );
   reaction.schedule();

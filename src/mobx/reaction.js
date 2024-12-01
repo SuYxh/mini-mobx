@@ -10,6 +10,7 @@ export default class Reaction {
     globalState.trackingDerivation = this;
     fn.call();
     globalState.trackingDerivation = null;
+    bindDependencies(this);
   }
   schedule() {
     globalState.pendingReactions.push(this);
@@ -19,6 +20,15 @@ export default class Reaction {
     this.onInvalidate();
   }
 }
+
+function bindDependencies(derivation) {
+  console.log('bindDependencies', derivation, derivation instanceof Reaction)
+  const { observing } = derivation;
+  observing.forEach((observableValue) => {
+    observableValue.observers.add(derivation);
+  });
+}
+
 
 function runReactions() {
   const allReactions = globalState.pendingReactions;

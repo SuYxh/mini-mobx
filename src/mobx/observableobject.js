@@ -1,4 +1,6 @@
-import { getNextId, $mobx, addHiddenProp, getAdm } from './utils';
+import { getNextId, $mobx, addHiddenProp, getAdm, globalState } from './utils';
+
+import Reaction from './reaction'
 
 const objectProxyTraps = {
   get(target, name) {
@@ -9,6 +11,21 @@ const objectProxyTraps = {
   }
 }
 
+function reportObserved(observableValue) {
+  const trackingDerivation = globalState.trackingDerivation;
+  console.log('reportObserved', trackingDerivation, trackingDerivation instanceof Reaction)
+  if (trackingDerivation) {
+    trackingDerivation.observing.push(observableValue);
+  }
+}
+
+function propagateChanged(observableValue) {
+  const { observers } = observableValue;
+  observers.forEach(observer => {
+    observer.runReaction();
+  });
+}
+
 // 管理可观察值
 class ObservableValue {
   constructor(value) {
@@ -16,10 +33,14 @@ class ObservableValue {
     this.observers = new Set();//此可观察值的监听者，可以说观察者
   }
   get() {
+    console.log('ObservableValue-get', this, this instanceof ObservableValue);
+    // this: ObservableValue 
+    reportObserved(this);
     return this.value;
   }
   setNewValue(newValue) {
     this.value = newValue;
+    propagateChanged(this);
   }
 }
 
@@ -36,7 +57,8 @@ class ObservableObjectAdministration {
   }
   set(key, value) {
     if (this.values.has(key)) {
-      return this.target[key] = value;
+      return this.setObservablePropValue(key, value);
+      // return this.target[key] = value;
     }
   }
   // 扩展可观察对象
@@ -59,9 +81,11 @@ class ObservableObjectAdministration {
       configurable: true,
       enumerable: true,
       get() {
+        console.log('defineObservableProperty-get')
         return this[$mobx].getObservablePropValue(key);
       },
       set() {
+        console.log('defineObservableProperty-set')
         return this[$mobx].setObservablePropValue(key, value);
       }
     }
