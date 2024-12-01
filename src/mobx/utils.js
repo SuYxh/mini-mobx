@@ -1,5 +1,10 @@
 let mobxGuid = 0;
 
+export const globalState = {
+  pendingReactions: [],
+  trackingDerivation: null
+}
+
 /**
  * @description: 用于存储管理对象的符号
  */
@@ -49,3 +54,4 @@ export function addHiddenProp(obj, propName, value) {
 export function getAdm(target) {
   return target[$mobx];
 }
+

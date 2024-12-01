@@ -174,7 +174,7 @@ export function getAdm(target) {
 
 
 
-## 实现基础响应式系统
+## 实现代理方式
 
 ![f179fa7fb96a1325af092f3831f8ebd5](https://qn.huat.xyz/mac/202412011507366.png)
 
@@ -301,4 +301,77 @@ export function object(target) {
 ```
 
 
+
+
+
+## 实现 autorun
+
+
+
+### autorun.js
+
+```js
+import { getNextId } from "./utils"
+import Reaction from './reaction';
+function autorun(view) {
+  const name = 'Autorun@' + getNextId();
+  const reaction = new Reaction(
+    name,
+    function () {
+      view()
+    }
+  );
+  reaction.schedule();
+}
+export default autorun;
+```
+
+
+
+### reaction.js
+
+```js
+import { globalState } from "./utils";
+export default class Reaction {
+  constructor(name, onInvalidate) {
+    this.name = name;
+    this.onInvalidate = onInvalidate;
+    this.observing = []; //表示它观察到了哪些可观察变量
+  }
+  track(fn) {
+    //Derivation=reaction
+    globalState.trackingDerivation = this;
+    fn.call();
+    globalState.trackingDerivation = null;
+  }
+  schedule() {
+    globalState.pendingReactions.push(this);
+    runReactions();
+  }
+  runReaction() {
+    this.onInvalidate();
+  }
+}
+
+function runReactions() {
+  const allReactions = globalState.pendingReactions;
+  let reaction;
+  while ((reaction = allReactions.shift())) {
+    reaction.runReaction();
+  }
+}
+```
+
+
+
+
+
+### utils.js
+
+```js
+export const globalState = {
+  pendingReactions: [],
+  trackingDerivation: null
+}
+```
 
